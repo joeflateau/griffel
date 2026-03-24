@@ -551,6 +551,92 @@ describe('resolveStyleRules', () => {
       `);
     });
 
+    it('handles @scope at-rules', () => {
+      expect(
+        resolveStyleRules({
+          '@scope (.parent)': { color: 'red' },
+        }),
+      ).toMatchInlineSnapshot(`
+        @scope (.parent) {
+          :scope {
+            color: red;
+          }
+        }
+      `);
+    });
+
+    it('handles @scope with & selector', () => {
+      const result = resolveStyleRules({
+        '@scope (&)': { color: 'red' },
+      });
+
+      expect(result).toMatchInlineSnapshot(`
+        @scope (.f1l6a6qb) {
+          :scope {
+            color: red;
+          }
+        }
+      `);
+    });
+
+    it('handles @scope with pseudo selectors', () => {
+      expect(
+        resolveStyleRules({
+          '@scope (.parent)': {
+            ':hover': { color: 'red' },
+          },
+        }),
+      ).toMatchInlineSnapshot(`
+        @scope (.parent) {
+          :scope:hover {
+            color: red;
+          }
+        }
+      `);
+    });
+
+    it('handles @scope with to boundary', () => {
+      expect(
+        resolveStyleRules({
+          '@scope (.parent) to (.boundary)': { color: 'red' },
+        }),
+      ).toMatchInlineSnapshot(`
+        @scope (.parent) to (.boundary) {
+          :scope {
+            color: red;
+          }
+        }
+      `);
+    });
+
+    it('handles @scope with & and to boundary', () => {
+      const result = resolveStyleRules({
+        '@scope (&) to (.boundary)': { color: 'red' },
+      });
+
+      expect(result).toMatchInlineSnapshot(`
+        @scope (.f1iomq9h) to (.boundary) {
+          :scope {
+            color: red;
+          }
+        }
+      `);
+    });
+
+    it("@scope doesn't collide with other properties", () => {
+      const result = resolveStyleRules({
+        color: 'red',
+        '@scope (.parent)': { color: 'red' },
+      });
+
+      expect(result[0]).toMatchInlineSnapshot(`
+        {
+          "sj55zd": "fe3e8s9",
+          "unrbm8": "fs94a6s",
+        }
+      `);
+    });
+
     it('handles media queries', () => {
       expect(
         resolveStyleRules({

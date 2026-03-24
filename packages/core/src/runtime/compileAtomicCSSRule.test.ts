@@ -13,6 +13,7 @@ const defaultAtRules: AtRules = {
   layer: '',
   media: '',
   supports: '',
+  scope: '',
 };
 
 describe('compileAtomicCSSRule', () => {
@@ -208,6 +209,92 @@ describe('compileAtomicCSSRule', () => {
       [
         ".foo{padding-left:0;padding-left:10px;}",
         ".rtl-foo{padding-right:0;padding-right:10px;}",
+      ]
+    `);
+  });
+
+  it('handles @scope at-rule', () => {
+    expect(
+      compileAtomicCSSRule(
+        {
+          ...defaultOptions,
+          property: 'color',
+          value: 'red',
+        },
+        { ...defaultAtRules, scope: '(.parent)' },
+      ),
+    ).toMatchInlineSnapshot(`
+      [
+        "@scope (.parent){:scope{color:red;}}",
+      ]
+    `);
+  });
+
+  it('handles @scope with & replacement', () => {
+    expect(
+      compileAtomicCSSRule(
+        {
+          ...defaultOptions,
+          property: 'color',
+          value: 'red',
+        },
+        { ...defaultAtRules, scope: '(&)' },
+      ),
+    ).toMatchInlineSnapshot(`
+      [
+        "@scope (.foo){:scope{color:red;}}",
+      ]
+    `);
+  });
+
+  it('handles @scope with pseudo selectors', () => {
+    expect(
+      compileAtomicCSSRule(
+        {
+          ...defaultOptions,
+          selectors: [':hover'],
+          property: 'color',
+          value: 'red',
+        },
+        { ...defaultAtRules, scope: '(.parent)' },
+      ),
+    ).toMatchInlineSnapshot(`
+      [
+        "@scope (.parent){:scope:hover{color:red;}}",
+      ]
+    `);
+  });
+
+  it('handles @scope with to boundary', () => {
+    expect(
+      compileAtomicCSSRule(
+        {
+          ...defaultOptions,
+          property: 'color',
+          value: 'red',
+        },
+        { ...defaultAtRules, scope: '(.parent) to (.boundary)' },
+      ),
+    ).toMatchInlineSnapshot(`
+      [
+        "@scope (.parent) to (.boundary){:scope{color:red;}}",
+      ]
+    `);
+  });
+
+  it('handles @scope with & and to boundary', () => {
+    expect(
+      compileAtomicCSSRule(
+        {
+          ...defaultOptions,
+          property: 'color',
+          value: 'red',
+        },
+        { ...defaultAtRules, scope: '(&) to (.boundary)' },
+      ),
+    ).toMatchInlineSnapshot(`
+      [
+        "@scope (.foo) to (.boundary){:scope{color:red;}}",
       ]
     `);
   });

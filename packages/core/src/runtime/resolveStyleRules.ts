@@ -14,6 +14,7 @@ import { isLayerSelector } from './utils/isLayerSelector';
 import { isNestedSelector } from './utils/isNestedSelector';
 import { isSupportQuerySelector } from './utils/isSupportQuerySelector';
 import { isContainerQuerySelector } from './utils/isContainerQuerySelector';
+import { isScopeSelector } from './utils/isScopeSelector';
 import { normalizeNestedProperty } from './utils/normalizeNestedProperty';
 import { isObject } from './utils/isObject';
 import { getStyleBucketName } from './getStyleBucketName';
@@ -93,6 +94,7 @@ export function resolveStyleRules(
     layer: '',
     media: '',
     supports: '',
+    scope: '',
   },
   cssClassesMap: CSSClassesMap = {},
   cssRulesByBucket: CSSRulesByBucket = {},
@@ -379,6 +381,17 @@ export function resolveStyleRules(
           classNameHashSalt,
           selectors,
           { ...atRules, container: containerQuery },
+          cssClassesMap,
+          cssRulesByBucket,
+        );
+      } else if (isScopeSelector(property)) {
+        const scopeQuery = property.slice(6).trim();
+
+        resolveStyleRules(
+          value as GriffelStyle,
+          classNameHashSalt,
+          selectors,
+          { ...atRules, scope: scopeQuery },
           cssClassesMap,
           cssRulesByBucket,
         );

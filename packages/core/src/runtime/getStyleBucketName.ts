@@ -57,6 +57,10 @@ export function getStyleBucketName(selectors: string[], atRules: AtRules): Style
     return 'c';
   }
 
+  if (atRules.scope) {
+    return 't';
+  }
+
   if (selectors.length > 0) {
     const normalizedPseudo = selectors[0].trim();
 
