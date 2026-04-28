@@ -18,6 +18,9 @@ export const WHITE = 'rgb(255, 255, 255)';
 export const YELLOW = 'rgb(255, 255, 0)';
 export const CYAN = 'rgb(0, 255, 255)';
 export const ORANGE = 'rgb(255, 165, 0)';
+export const BLUE = 'rgb(0, 0, 255)';
+export const RED = 'rgb(255, 0, 0)';
+export const BLACK = 'rgb(0, 0, 0)';
 
 export function render(html: string): void {
   document.body.innerHTML = html;
@@ -25,6 +28,10 @@ export function render(html: string): void {
 
 export function getBg(el: Element): string {
   return getComputedStyle(el).backgroundColor;
+}
+
+export function getColor(el: Element): string {
+  return getComputedStyle(el).color;
 }
 
 export function applyStyles<S extends string>(stylesBySlot: Record<S, GriffelStyle>): Record<S, string> {
