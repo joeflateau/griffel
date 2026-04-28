@@ -2,7 +2,7 @@
 // Excluded from the published package via tsconfig.lib.json.
 
 import { commands as rawCommands } from '@vitest/browser/context';
-import { createDOMRenderer, makeStyles, type GriffelStyle } from '../index.js';
+import { createDOMRenderer, makeResetStyles, makeStyles, type GriffelResetStyle, type GriffelStyle } from '../index.js';
 
 // Raw commands is typed as an empty `BrowserCommands` interface. Cast
 // locally to expose the mouse commands we register in vitest.config.ts.
@@ -18,8 +18,9 @@ export const WHITE = 'rgb(255, 255, 255)';
 export const YELLOW = 'rgb(255, 255, 0)';
 export const CYAN = 'rgb(0, 255, 255)';
 export const ORANGE = 'rgb(255, 165, 0)';
-export const BLUE = 'rgb(0, 0, 255)';
+export const LIGHT_GREEN = 'rgb(144, 238, 144)';
 export const RED = 'rgb(255, 0, 0)';
+export const BLUE = 'rgb(0, 0, 255)';
 export const BLACK = 'rgb(0, 0, 0)';
 
 export function render(html: string): void {
@@ -38,6 +39,12 @@ export function applyStyles<S extends string>(stylesBySlot: Record<S, GriffelSty
   const getStyles = makeStyles(stylesBySlot);
   const renderer = createDOMRenderer(document);
   return getStyles({ dir: 'ltr', renderer });
+}
+
+export function applyResetStyles(styles: GriffelResetStyle): string {
+  const getClassName = makeResetStyles(styles);
+  const renderer = createDOMRenderer(document);
+  return getClassName({ dir: 'ltr', renderer });
 }
 
 /**
